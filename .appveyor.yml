@@ -27,13 +27,15 @@ environment:
 # otherwise we get the error: "fatal: reference is not a tree <commit>"
 clone_depth: 15
 
-init:
+init:git config
+
   # Don't try to convert line endings to Win32 CRLF
   - git config --global core.autocrlf input
 
 install:
   - ps: if (Test-Path Env:\CYG_ROOT) { Start-FileDownload "https://cygwin.com/$env:CYG_SETUP" -FileName "$env:CYG_SETUP" }
-  - if defined CYG_ROOT (%CYG_SETUP% --quiet-mode --no-shortcuts --only-site --root "%CYG_ROOT%" --site "%CYG_MIRROR%" --local-package-dir "%CYG_CACHE%" --packages "%CYG_PACKAGES%" --upgrade-also)
+
+- if defined CYG_ROOT (%CYG_SETUP% --quiet-mode --no-shortcuts --only-site --root "%CYG_ROOT%" --site "%CYG_MIRROR%" --local-package-dir "%CYG_CACHE%" --packages "%CYG_PACKAGES%" --upgrade-also)
   # (temporary?) problem with msys/pacman/objc/ada (see https://github.com/msys2/msys2/wiki/FAQ)
   #- if defined MSYSTEM (%BASH% -lc "pacman -Rns --noconfirm mingw-w64-{i686,x86_64}-gcc-ada mingw-w64-{i686,x86_64}-gcc-objc")
   # temporary fix for MSYS revoked/new signing keys:
@@ -70,3 +72,4 @@ only_commits:
     - OpenCL/inc_*
     - Makefile
     - .appveyor.yml
+src
